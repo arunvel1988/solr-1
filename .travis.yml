@@ -13,5 +13,8 @@ services:
 
 before_install:
   - docker build -t rmarchei/solr .
+  - docker run -d -p 127.0.0.1:8983:8983 rmarchei/solr -m 1g
+  - docker ps -a
+
 script:
   - true
