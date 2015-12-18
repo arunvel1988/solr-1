@@ -21,7 +21,7 @@ ENV SOLR_UID 8983
 RUN groupadd -r $SOLR_USER -o -g $SOLR_UID && \
   useradd -r -u $SOLR_UID -o -g $SOLR_USER -m -d /opt/solr $SOLR_USER
 
-ENV SOLR_VERSION 5.3.1
+ENV SOLR_VERSION 5.4.0
 
 RUN cd /tmp && \
   curl -s -O http://archive.apache.org/dist/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz && \
@@ -31,9 +31,6 @@ RUN cd /tmp && \
   rm -f /tmp/solr-$SOLR_VERSION.tgz* && \
   mkdir -p /opt/solr/server/solr/lib && \
   chown -R $SOLR_USER. /opt/solr
-
-# https://issues.apache.org/jira/browse/SOLR-8107
-RUN sed --in-place -e 's/^    "$JAVA" "${SOLR_START_OPTS\[@\]}" $SOLR_ADDL_ARGS -jar start.jar "${SOLR_JETTY_CONFIG\[@\]}"/    exec "$JAVA" "${SOLR_START_OPTS[@]}" $SOLR_ADDL_ARGS -jar start.jar "${SOLR_JETTY_CONFIG[@]}"/' /opt/solr/bin/solr
 
 # https://cwiki.apache.org/confluence/display/solr/Configuring+Logging
 RUN sed --in-place -e 's/^log4j.appender.file.MaxFileSize=4MB$/log4j.appender.file.MaxFileSize=100MB/' /opt/solr/server/resources/log4j.properties
