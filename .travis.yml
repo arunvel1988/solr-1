@@ -23,6 +23,3 @@ before_install:
 script:
   - docker exec -it solr grep ERROR /opt/solr/server/logs/solr.log; test $? -eq 1
   - curl -s --retry 5 --retry-delay 2 -f http://localhost:8983/solr/test_core/admin/ping
-
-after_success:
-  - curl -s --data 'build=true' -X POST https://registry.hub.docker.com/u/$TRAVIS_REPO_SLUG/trigger/$DOCKER_TOKEN/
