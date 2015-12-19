@@ -15,6 +15,7 @@ before_install:
   - docker build -t rmarchei/solr .
   - docker run -d -p 127.0.0.1:8983:8983 --name solr rmarchei/solr -m 1g && sleep 3
   - docker ps -a
+  - docker exec -it solr cat /etc/centos-release
   - docker exec -it solr id
   - docker exec -it solr pwd
   - docker exec -it solr bin/solr create_core -c test_core
