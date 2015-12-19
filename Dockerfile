@@ -12,8 +12,8 @@ FROM centos:latest
 MAINTAINER Ruggero Marchei <ruggero.marchei@daemonzone.net>
 
 
-RUN yum install -q -y java-1.8.0-openjdk-headless unzip && \
-  yum clean all -q
+RUN yum install -y java-1.8.0-openjdk-headless unzip && \
+  yum clean all
 
 ENV SOLR_USER solr
 ENV SOLR_UID 8983
