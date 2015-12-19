@@ -25,4 +25,4 @@ script:
   - curl -s --retry 5 --retry-delay 2 -f http://localhost:8983/solr/test_core/admin/ping
 
 after_success:
-  - curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/rmarchei/solr/trigger/$DOCKER_TOKEN/
+  - "curl -H 'Content-Type: application/json' --data '{\"build\": true}' -X POST https://registry.hub.docker.com/u/rmarchei/solr/trigger/$DOCKER_TOKEN/"
