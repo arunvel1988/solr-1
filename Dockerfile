@@ -12,8 +12,14 @@ FROM centos:latest
 MAINTAINER Ruggero Marchei <ruggero.marchei@daemonzone.net>
 
 
-RUN yum install -y java-1.8.0-openjdk-headless unzip && \
-  yum clean all
+ENV JDK_VERSION 8u71-b15
+
+RUN cd /tmp && \
+  yum install -y unzip && \
+  curl -sLO -b "oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/${JDK_VERSION}/jdk-${JDK_VERSION%%-*}-linux-x64.rpm && \
+  yum install -y /tmp/jdk-${JDK_VERSION%%-*}-linux-x64.rpm && \
+  rm -f /tmp/jdk-${JDK_VERSION%%-*}-linux-x64.rpm && \
+  yum clean all -q
 
 ENV SOLR_USER solr
 ENV SOLR_UID 8983
