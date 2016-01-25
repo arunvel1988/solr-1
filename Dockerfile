@@ -36,6 +36,7 @@ RUN cd /tmp && \
   tar -C /opt/solr --extract --file /tmp/solr-$SOLR_VERSION.tgz --strip-components=1 && \
   rm -f /tmp/solr-$SOLR_VERSION.tgz* && \
   mkdir -p /opt/solr/server/solr/lib && \
+  mkdir -p /opt/solr/server/solr/cores && \
   chown -R $SOLR_USER. /opt/solr
 
 # https://cwiki.apache.org/confluence/display/solr/Configuring+Logging
