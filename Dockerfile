@@ -27,7 +27,7 @@ ENV SOLR_UID 8983
 RUN groupadd -r $SOLR_USER -o -g $SOLR_UID && \
   useradd -r -u $SOLR_UID -o -g $SOLR_USER -m -d /opt/solr $SOLR_USER
 
-ENV SOLR_VERSION 5.4.0
+ENV SOLR_VERSION 5.4.1
 
 RUN cd /tmp && \
   curl -s -O http://archive.apache.org/dist/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz && \
