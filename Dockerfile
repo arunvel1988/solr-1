@@ -21,11 +21,21 @@ RUN cd /tmp && \
   rm -f /tmp/jdk-${JDK_VERSION%%-*}-linux-x64.rpm && \
   yum clean all -q
 
+
+ENV GOSU_VERSION 1.7
+
+RUN cd /usr/local/bin \
+  && curl -fsSL -o gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64" \
+  && curl -fsSL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/SHA256SUMS" | grep -E 'gosu-amd64$' | sed -e 's/gosu-.*$/gosu/' | sha256sum -c - \
+  && chmod +x gosu
+
+
 ENV SOLR_USER solr
 ENV SOLR_UID 8983
 
 RUN groupadd -r $SOLR_USER -o -g $SOLR_UID && \
   useradd -r -u $SOLR_UID -o -g $SOLR_USER -m -d /opt/solr $SOLR_USER
+
 
 ENV SOLR_VERSION 5.4.1
 
@@ -36,15 +46,18 @@ RUN cd /tmp && \
   tar -C /opt/solr --extract --file /tmp/solr-$SOLR_VERSION.tgz --strip-components=1 && \
   rm -f /tmp/solr-$SOLR_VERSION.tgz* && \
   mkdir -p /opt/solr/server/solr/lib && \
-  mkdir -p /opt/solr/server/solr/cores && \
   chown -R $SOLR_USER. /opt/solr
 
-# https://cwiki.apache.org/confluence/display/solr/Configuring+Logging
-RUN sed --in-place -e 's/^log4j.appender.file.MaxFileSize=4MB$/log4j.appender.file.MaxFileSize=100MB/' /opt/solr/server/resources/log4j.properties
 
 EXPOSE 8983
 WORKDIR /opt/solr
-USER $SOLR_USER
 
-ENTRYPOINT ["/opt/solr/bin/solr", "start", "-f"]
+
+RUN mkdir /docker-entrypoint-init.d
+COPY docker-entrypoint-init.d/* /docker-entrypoint-init.d/
+
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["-m", "512m"]
