@@ -11,9 +11,12 @@ git:
 services:
   - docker
 
+env:
+  - VERSION=5.4
+
 before_install:
-  - docker build -t rmarchei/solr .
-  - docker run -d -p 127.0.0.1:8983:8983 --name solr rmarchei/solr -m 1g && sleep 3
+  - docker build -t rmarchei/solr:$VERSION $VERSION/
+  - docker run -d -p 127.0.0.1:8983:8983 --name solr rmarchei/solr:$VERSION -m 1g && sleep 3
   - docker ps -a
   - docker exec -it solr cat /etc/centos-release
   - docker exec -it solr id
@@ -23,3 +26,6 @@ before_install:
 script:
   - docker exec -it solr grep ERROR /opt/solr/server/logs/solr.log; test $? -eq 1
   - curl -s --retry 5 --retry-delay 2 -f http://localhost:8983/solr/test_core/admin/ping
+
+after_script:
+  - docker images
